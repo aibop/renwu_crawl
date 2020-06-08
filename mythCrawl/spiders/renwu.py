@@ -48,6 +48,25 @@ class RenwuSpider(scrapy.Spider):
         item = RenwuItem()
         item['renwu_id'] = renwu_id
         item['details'] = content
+        item['nationality'] = ''
+        item['zihao'] = ''
+        item['generation'] = ''
+        item['nation'] = ''
+        item['birthplace'] = ''
+        item['birthdate'] = ''
+        item['dearth_time'] = ''
+        item['master_works'] = ''
+        item['achieve'] = ''
+        item['ancestral_home'] = ''
+        item['official'] = ''
+        item['confer'] = ''
+        item['posthumous_title'] = ''
+        item['investiture'] = ''
+        item['tomb'] = ''
+        item['era_name'] = ''
+        item['foreign_name'] = ''
+        item['occupation'] = ''
+        item['belief'] = ''
 
         basic_info_arr = response.xpath('//dl[contains(@class,"basicInfo-block")]')
         for dd in basic_info_arr:

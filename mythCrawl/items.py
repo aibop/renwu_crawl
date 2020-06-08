@@ -66,14 +66,21 @@ class RenwuItem(scrapy.Item):
 
     def update_sql(self):
         sql = """
-                update wx_renwu_lists set alias_name=%s,nationality=%s,nation,birthplace=%s,birthdate=%s,occupation=%s,achieve=%s,generation=%s,ancestral_home=%s
-                    official,confer=%s,posthumous_title=%s,investiture=%s,dearth_time=%s,zihao=%s,master_works=%s,tomb=%s,era_name=%s,foreign_name=%s,belief=%s,details=%s)
-                where id = %d
+                update wx_renwu_lists set alias_name=%s,nationality=%s,nation=%s,birthplace=%s,birthdate=%s,occupation=%s,achieve=%s,generation=%s,ancestral_home=%s
+                    official=%s,confer=%s,posthumous_title=%s,investiture=%s,dearth_time=%s,zihao=%s,master_works=%s,tomb=%s,era_name=%s,foreign_name=%s,belief=%s,details=%s)
+                where id = %s
             """
+
+        sql = "update wx_renwu_lists set alias_name='"+self['alias_name']+"',nationality='"+self['nationality']+"',nation='"+self['nation']+"',birthplace='"+self['birthplace']+"',\
+            birthdate='"+self['birthdate']+"',occupation='"+self['occupation']+"',achieve='"+self['achieve']+"',generation='"+self['generation']+"',ancestral_home='"+self['ancestral_home']+"' ,\
+            official='"+self['official']+"',confer='"+self['confer']+"',posthumous_title='"+self['posthumous_title']+"',investiture='"+self['investiture']+"',\
+            dearth_time='"+self['dearth_time']+"',zihao='"+self['zihao']+"',master_works='"+self['master_works']+"',tomb='"+self['tomb']+"',\
+            era_name='"+self['era_name']+"',foreign_name='"+self['foreign_name']+"',belief='"+self['belief']+"',details='"+self['details']+"' \
+            where id = '"+str(self['renwu_id'])+"'"
         params = (
-            self['alias_name'], self['nationality'], self['nation'], self['birthplace'], self['birthdate'], self['occupation'], self['achieve'], self['generation'], 
-            self['ancestral_home'], self['official'], self['confer'], self['posthumous_title'], self['investiture'], self['dearth_time'], self['zihao'], self['master_works'], 
-            self['tomb'], self['era_name'], self['foreign_name'], self['belief'], self['details'], self['renwu_id']
+            # self['alias_name'], self['nationality'], self['nation'], self['birthplace'], self['birthdate'], self['occupation'], self['achieve'], self['generation'], 
+            # self['ancestral_home'], self['official'], self['confer'], self['posthumous_title'], self['investiture'], self['dearth_time'], self['zihao'], self['master_works'], 
+            # self['tomb'], self['era_name'], self['foreign_name'], self['belief'], self['details'], self['renwu_id'] 
         )
 
         return sql, params

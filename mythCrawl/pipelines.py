@@ -114,7 +114,8 @@ class RenWuListPipeline(object):
         # 根据不同的item 构建不同的sql语句并插入到mysql中
         insert_sql, params = item.update_sql()
         print(insert_sql)
-        cursor.execute(insert_sql, params)
+        print(params)
+        cursor.execute(insert_sql)
 
     def insert_mysql(self, item):
         host = settings['MYSQL_HOST']
