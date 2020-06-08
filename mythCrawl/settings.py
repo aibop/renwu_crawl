@@ -9,6 +9,8 @@
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
+import platform
+
 BOT_NAME = 'mythCrawl'
 
 SPIDER_MODULES = ['mythCrawl.spiders']
@@ -56,6 +58,7 @@ ROBOTSTXT_OBEY = False
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
    'mythCrawl.middlewares.MythcrawlDownloaderMiddleware': 543,
+   'mythCrawl.my_middlewares.UserAgent.RotateUserAgentMiddleware': 551,
 }
 
 # Enable or disable extensions
@@ -67,19 +70,40 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'mythCrawl.pipelines.MythcrawlPipeline': 300,
+   # 'mythCrawl.pipelines.MythcrawlPipeline': 300,
+   'mythCrawl.pipelines.RenWuListPipeline': 300,
     # 'scrapy_redis.pipelines.RedisPipeline': 301
 }
 
-REDIS_HOST = '127.0.0.1'
-REDIS_PORT = 6379
-# 有密码时使用
-REDIS_PARAMS = {'password': ''}
 
-MYSQL_HOST = "127.0.0.1"
-MYSQL_DBNAME = "myth"
-MYSQL_USER = "root"
-MYSQL_PASSWORD = "123456"
+
+if platform.system() == 'Windows':
+   CONFIG_PATH = 'D:\data_dir'
+   REDIS_HOST = '127.0.0.1'
+   REDIS_PORT = 6379
+   REDIS_PARAMS = {'password': ''}
+
+   MYSQL_HOST = "127.0.0.1"
+   MYSQL_DBNAME = "wx-apply"
+   MYSQL_USER = "root"
+   MYSQL_PASSWORD = "123456"
+
+else:
+   CONFIG_PATH = '/root/data_dir'
+   REDIS_HOST = '39.104.131.59'
+   REDIS_PORT = 6379
+   REDIS_PARAMS = {'password': 'oFtu01ReAFqO68D'}
+   SENTINEL_PORT = 26379
+   HOST_SLAVE = '172.18.11.136'
+
+   MYSQL_HOST = "39.104.131.59"
+   MYSQL_DBNAME = "wx-apply"
+   MYSQL_USER = "root"
+   MYSQL_PASSWORD = "y4NuTl0gcX3qUNCEuPReCFqVK"
+
+
+
+
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -101,3 +125,5 @@ MYSQL_PASSWORD = "123456"
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+HTTPERROR_ALLOWED_CODES  = [302]
+MEDIA_ALLOW_REDIRECTS = True
