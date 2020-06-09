@@ -27,7 +27,7 @@ class RenwuSpider(scrapy.Spider):
         connect = pymysql.connect(user=root, password=password, db=db_name, host=host, port=3306, charset='utf8')
         cursor = connect.cursor()
 
-        cursor.execute('SELECT * FROM wx_renwu_lists limit 1')
+        cursor.execute('SELECT * FROM wx_renwu_lists limit 10')
         rows = cursor.fetchall()
         print(rows)
         for row in rows:
@@ -146,6 +146,51 @@ class RenwuSpider(scrapy.Spider):
             '出生时间':'birthdate',
             '去世时间':'dearth_time',
             '主要作品':'master_works',
+            '主要成就':'achieve',
+            '祖籍':'ancestral_home',
+            '官职':'official',
+            '追赠':'confer',
+            '谥号':'posthumous_title',
+            '封爵':'investiture',
+            '陵墓':'tomb',
+            '年号':'era_name',
+            '外文名':'foreign_name',
+            '职业':'occupation',
+            '信仰':'belief'
+        }
+
+        if content in fields:
+            return fields[content]
+        return ''
+
+    def info_fields(self):
+        fields = {
+            '民间传说':'folklore',
+            '来历传说':'folklore',
+            '趣闻轶事':'folklore',
+            '相关争议':'controversy',
+            '生平事迹':'life_story',
+            '生平经历':'life_story',
+            '人物生平':'life_story',
+            '活动区域':'zihao',
+            '文献记载':'records',
+            '史书记载':'records',
+            '史籍记载':'records',
+            '主要成就':'achievement',
+            '历史评价':'historical',
+            '轶事典故':'folklore',
+            '文学成就':'achievement',
+            '人物简介':'life_story',
+            '主要作品':'master_works',
+
+
+
+
+
+
+
+
+            
             '主要成就':'achieve',
             '祖籍':'ancestral_home',
             '官职':'official',

@@ -105,7 +105,6 @@ class RenWuListPipeline(object):
     def process_item(self, item, spider):
         # 使用twisted将mysql插入变成异步执行
         # self.dbpool.runInteraction(self.do_insert, item)
-        print(item)
         self.insert_mysql(item)
 
 
@@ -114,7 +113,6 @@ class RenWuListPipeline(object):
         # 根据不同的item 构建不同的sql语句并插入到mysql中
         insert_sql, params = item.update_sql()
         print(insert_sql)
-        print(params)
         cursor.execute(insert_sql)
 
     def insert_mysql(self, item):

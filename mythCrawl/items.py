@@ -53,6 +53,14 @@ class RenwuItem(scrapy.Item):
     belief = scrapy.Field()
     details = scrapy.Field()
 
+    # 人物更多信息
+    life_story = scrapy.Field()
+    life_introduced = scrapy.Field()
+    achievement = scrapy.Field()
+    celebrated = scrapy.Field()
+    historical_evaluation = scrapy.Field()
+    master_works = scrapy.Field()
+
     def get_sql(self):
         sql = """
                 insert into myth_themes (content,author,lipic,review_num)
@@ -84,3 +92,4 @@ class RenwuItem(scrapy.Item):
         )
 
         return sql, params
+
