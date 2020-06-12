@@ -60,17 +60,21 @@ class RenwuItem(scrapy.Item):
     celebrated = scrapy.Field()
     historical_evaluation = scrapy.Field()
     master_works = scrapy.Field()
+    infos = scrapy.Field()
 
     def get_sql(self):
-        sql = """
-                insert into myth_themes (content,author,lipic,review_num)
-                VALUES (%s,%s,%s,%s)
-            """
-        params = (
-            self['content'], self['author'], self['lipic'], self['review_num']
-        )
+        fields = ['folklore', 'controversy', 'records', 'movement_area', 'historical', 'life_story', 'life_introduced', 'achievement', 'celebrated', 'historical_evaluation', 'master_works']
+        infos = self['infos']
 
-        return sql, params
+        sql = "insert into wx_renwu_info (renwu_id,folklore,controversy,records, movement_area, historical,life_story,life_introduced,\
+            achievement,celebrated,historical_evaluation,master_works) VALUES (" + str(self['renwu_id']) + ","
+        for vo in fields:
+            content = infos[vo] if vo in infos else ''
+            sql += "'"+content + "',"
+
+        sql = sql[:-1] + ")"
+
+        return sql
 
     def update_sql(self):
         sql = """
