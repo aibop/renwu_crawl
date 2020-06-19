@@ -31,24 +31,111 @@ class RenwuSpider(scrapy.Spider):
         connect = pymysql.connect(user=root, password=password, db=db_name, host=host, port=3306, charset='utf8')
         cursor = connect.cursor()
 
-        cursor.execute('SELECT * FROM wx_renwu_lists limit 100')
+        cursor.execute("SELECT * FROM wx_renwu_lists where cate_code !='list_shijie' and cate_code!='list_riben'\
+             and cate_code!='list_riben' and cate_code!='list_xiandai' and cate_code!='list_deguo' and cate_code!='list_meiguo' and cate_code!='list_yingguo'\
+                 and cate_code!='list_yidali' and cate_code!='list_chaoxian' and cate_code!='list_eguo' and cate_code!='list_faguo' and cate_code!='list_faguo' and cate_code!='list_xianya'")
+
+        # cursor.execute("SELECT * FROM wx_renwu_lists where id=146")
         rows = cursor.fetchall()
+
+
+        cursor.execute('SELECT * FROM wx_renwu_info group by renwu_id')
+        is_crawls = cursor.fetchall()
+
+        crawled = []
+        for cr in is_crawls:
+            crawled.append(cr[1])
+
+        print(crawled)
         for row in rows:
-            print(row[3])
-            url = 'https://baike.baidu.com/item/' + row[3]
-            yield scrapy.Request(url=url, meta={'renwu': row}, dont_filter=True)
+            renwu_id = row[0]
+            if renwu_id not in crawled:
+                url = 'https://baike.baidu.com/item/' + row[3]
+                if row[3] == '雷神':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/2428'
+                elif row[3] == '范无救':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/23119759'
+                elif row[3] == '仓颉':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/735'
+                elif row[3] == '无当圣母':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/10384652'
+                elif row[3] == '谢必安':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/10207021'
+                elif row[3] == '吴刚':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/747'
+                elif row[3] == '闻仲':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/2926894'
+                elif row[3] == '孟婆':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/172504'
+                elif row[3] == '阿羞':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/22174598'
+                elif row[3] == '花木兰':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/6456'
+                elif row[3] == '韩子高':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/1979472'
+                elif row[3] == '避水金睛兽':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/6108800'
+                elif row[3] == '火德星君':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/1899985'
+                elif row[3] == '沃丁':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/5802968'
+                elif row[3] == '姬静':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/3576376'
+                elif row[3] == '伯邑考':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/10441358'
+                elif row[3] == '周公':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/131359'
+                elif row[3] == '孙膑':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/133572'
+                elif row[3] == '庄子':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/8074'
+                elif row[3] == '晏婴':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/982275'
+                elif row[3] == '司马错':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/883006'
+                elif row[3] == '郑袖':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/3919894'
+                elif row[3] == '魏美人':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/18899252'
+                elif row[3] == '申不害':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/1407321'
+                elif row[3] == '楚灵王':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/7273818'
+                elif row[3] == '齐襄王':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/1855061'
+                elif row[3] == '乐羊':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/641151'
+                elif row[3] == '王龁':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/9839282'
+                elif row[3] == '鲁仲连':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/578311'
+                elif row[3] == '羊斟':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/23222378'
+                elif row[3] == '宋平公':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/4406195'
+                elif row[3] == '共姬':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/9197043'
+                elif row[3] == '项羽':
+                    url = 'https://baike.baidu.com/item/'+ row[3] + '/7005'
+                
+                yield scrapy.Request(url=url, meta={'renwu': row}, dont_filter=True)
 
     def parse(self, response):
         request_url = response.request.url
         print(request_url)
 
-        
+        renwu = response.meta['renwu']
+        renwu_id = renwu[0]
+
         main_content = response.xpath('//div[@class="main-content"]').extract_first()
         # print(main_content)
-        soup = BeautifulSoup(main_content, "lxml")
+        try:
+            soup = BeautifulSoup(main_content, "lxml")
+        except:
+            print(renwu[3])
 
         div1 = soup.find_all(attrs={'class':'para-title level-2'})
-        infos = {}
+        infos = []
         for div in div1:
             div2 = soup.find(attrs={'class':'anchor-list '})
             txt = get_content_between_tables(div, div2)
@@ -56,28 +143,46 @@ class RenwuSpider(scrapy.Spider):
             info = ''
             title = ''
             for v in txt:
-                title = v['title']
+                if v['title']:
+                    title = v['title']
                 
                 content = v['content']
                 info += content
+            if info:
+                fid = self.info_fields(title, renwu_id)
+                infos.append({'fid':fid, 'content':info})
+        
+        if not infos:
+            div1 = soup.find_all(attrs={'class':'para-title level-3'})
+            infos = []
+            for div in div1:
+                div2 = soup.find(attrs={'class':'anchor-list '})
+                txt = get_content_between_tables(div, div2)
 
-            title = self.info_fields(title)
+                info = ''
+                title = ''
+                for v in txt:
+                    if v['title']:
+                        title = v['title']
+                    
+                    content = v['content']
+                    info += content
 
-            
-            if title:
-                infos[title] = info
+                if info:
+                    fid = self.info_fields(title, renwu_id)
+                    infos.append({'fid':fid, 'content':info})
 
         print(infos)
+
+        if not infos:
+            self.record_err(renwu[3], renwu_id)
 
         item = RenwuItem()
         item['infos'] = infos
 
-        renwu = response.meta['renwu']
-        renwu_id = renwu[0]
-
         renwu_info = response.xpath('//div[@class="lemma-summary"]').extract_first()
         content = self.go_remove_tag(renwu_info) if renwu_info else ''
-        print(content)
+        # print(content)
         
         item['renwu_id'] = renwu_id
         item['alias_name'] = ''
@@ -107,60 +212,19 @@ class RenwuSpider(scrapy.Spider):
             names = dd.xpath('./dt')
             for d in names:
                 name = d.xpath('./text()').extract_first()
-                name = self.go_remove_tag(name)
-                field = self.field_get(name)
-                value = d.xpath('./following-sibling::dd').xpath('string(.)').extract_first()
-                value = self.go_remove_tag(value)
-                print(name)
-                print(field)
-                print(value)
+                field = ''
+                if name :
+                    name = self.go_remove_tag(name)
+                    field = self.field_get(name)
+                    value = d.xpath('./following-sibling::dd').xpath('string(.)').extract_first()
+                    value = self.go_remove_tag(value)
+                # print(name)
+                # print(field)
+                # print(value)
                 if field and not item[field]:
                     item[field] = value
 
         yield item
-        # print(item)  
-        #     value = dd.xpath('./dd/text()').extract()
-        #     nationality_tmp.append({'name':name,'value':value})
-
-        # print(nationality_tmp)
-
-        # next_page = response.xpath('//div[@class="pg1"]/a/text()').extract()
-        # pages = []
-        # for page in next_page:
-        #     if page == '下一页' or page == '上一页':
-        #         continue
-
-        #     pages.append(int(page))
-
-        # max_page = max(pages)
-        # n_page = int(current_page) + 1
-        # if n_page < max_page:
-        #     url = 'http://www.360wa.com/shentucao/' + str(n_page)
-        #     print(url)
-        #     yield scrapy.Request(url, callback=self.parse)
-
-        # list = response.xpath('//div[@class="p1"]')
-        # for li in list:
-        #     try:
-        #         item = MythcrawlItem()
-        #         contents = li.xpath('./div/a/p[2]/text()').extract()
-        #         content = ''
-        #         for cont in contents:
-        #             content += cont
-
-        #         author = li.xpath('./div/div[1]|./div/div[1]/a').xpath('string(.)').extract_first().strip()
-        #         item['content'] = content
-        #         item['author'] = author
-        #         item['lipic'] = ''
-        #         item['review_num'] = 0
-
-
-
-        #         yield item
-        #     except Exception as e:
-        #         traceback.print_exc()
-        #         print(e)
-        #         continue
     
     def go_remove_tag(self,  value):
         content = remove_tags(value)
@@ -197,42 +261,103 @@ class RenwuSpider(scrapy.Spider):
             return fields[content]
         return ''
 
-    def info_fields(self,content):
-        fields = {
-            '民间传说':'folklore',
-            '来历传说':'folklore',
-            '趣闻轶事':'folklore',
-            '相关争议':'controversy',
-            '生平事迹':'life_story',
-            '生平经历':'life_story',
-            '人物生平':'life_story',
-            '活动区域':'movement_area',
-            '文献记载':'records',
-            '史书记载':'records',
-            '史籍记载':'records',
-            '主要成就':'achievement',
-            '历史评价':'historical',
-            '轶事典故':'folklore',
-            '文学成就':'achievement',
-            '人物简介':'life_story',
-            '主要作品':'master_works',
+    def info_fields(self,content,renwu_id):
+        # fields = {
+        #     '民间传说':'folklore',
+        #     '来历传说':'folklore',
+        #     '趣闻轶事':'folklore',
+        #     '相关争议':'controversy',
+        #     '生平事迹':'life_story',
+        #     '生平经历':'life_story',
+        #     '人物生平':'life_story',
+        #     '活动区域':'movement_area',
+        #     '文献记载':'records',
+        #     '史书记载':'records',
+        #     '史籍记载':'records',
+        #     '主要成就':'achievement',
+        #     '历史评价':'historical',
+        #     '轶事典故':'folklore',
+        #     '文学成就':'achievement',
+        #     '人物简介':'life_story',
+        #     '主要作品':'master_works',
+        #     '主要功绩':'achievement',
+        #     '记载':'folklore',
+        #     '史料记载':'records',
+        #     '历史功绩':'achievement',
+        #     '传说':'folklore',
+        #     '八卦杂谈':'records',
+        #     '人物经历':'life_story',
+        #     '主要成就':'achievement',
+        #     '故里争辩':'historical',
+        #     '后世考证':'historical',
+        #     '相关历史':'records',
+        #     '神话人物':'folklore',
+        #     '个人轶事': 'folklore',
+        #     '古今记述':'life_story',
+        #     '古代史料':'records',
+        #     '巴蜀传说':'folklore',
+        #     '版本1':'folklore',
+        #     '典籍记载':'records',
+        #     '相关传说':'folklore',
+        #     '相关记载':'records',
+        #     '早年':'folklore',
+        #     '疑云':'records',
+        #     '角色原型':'records',
+        #     '烛龙':'records',
+        #     '人物设定':'life_story',
+        #     '文学记载':'records',
+        #     '传说之一':'folklore',
+        #     '传说之二':'folklore',
+        #     '传说之三':'folklore',
+        #     '传说之四':'folklore',
+        #     '评价':'historical',
+        #     '出场':'folklore',
+        #     '原著原文':'records',
+        #     '人物介绍':'life_story',
+        #     '角色设定':'life_story',
+        #     '相关资料':'historical',
+        #     '相关故事':'folklore',
+        #     '人物简述':'historical',
+        #     '原著描写':'records',
+        #     '历史考证':'historical',
+        #     '原著引用':'historical',
+        #     '人物来历':'folklore',
+        #     '人物引述':'historical'
 
-            # '主要成就':'achieve',
-            # '祖籍':'ancestral_home',
-            # '官职':'official',
-            # '追赠':'confer',
-            # '谥号':'posthumous_title',
-            # '封爵':'investiture',
-            # '陵墓':'tomb',
-            # '年号':'era_name',
-            # '外文名':'foreign_name',
-            # '职业':'occupation',
-            # '信仰':'belief'
-        }
+        #     # '主要成就':'achieve',
+        #     # '祖籍':'ancestral_home',
+        #     # '官职':'official',
+        #     # '追赠':'confer',
+        #     # '谥号':'posthumous_title',
+        #     # '封爵':'investiture',
+        #     # '陵墓':'tomb',
+        #     # '年号':'era_name',
+        #     # '外文名':'foreign_name',
+        #     # '职业':'occupation',
+        #     # '信仰':'belief'
+        # }
 
-        if content in fields:
-            return fields[content]
-        return ''
+        # if content in fields:
+        #     return fields[content]
+
+        settings = get_project_settings()
+        root = settings['MYSQL_USER']
+        password = settings['MYSQL_PASSWORD']
+        db_name = settings['MYSQL_DBNAME']
+        host = settings['MYSQL_HOST']
+        connect = pymysql.connect(user=root, password=password, db=db_name, host=host, port=3306, charset='utf8')
+        cursor = connect.cursor()
+
+        sql = "insert into wx_renwu_field (name, renwu_id) VALUES ('"+content+"', '"+ str(renwu_id) +"')"
+        print(sql)
+        cursor.execute(sql)
+        fid = connect.insert_id()
+
+        connect.commit()
+        cursor.close()
+        connect.close()
+
+        return fid
 
 
     # def start_requests(self):
@@ -241,6 +366,26 @@ class RenwuSpider(scrapy.Spider):
     #             'dont_redirect': True,
     #             'handle_httpstatus_list': [302]
     #         }, callback=self.parse) 
+
+    def record_err(self, content, renwu_id):
+        settings = get_project_settings()
+        root = settings['MYSQL_USER']
+        password = settings['MYSQL_PASSWORD']
+        db_name = settings['MYSQL_DBNAME']
+        host = settings['MYSQL_HOST']
+        connect = pymysql.connect(user=root, password=password, db=db_name, host=host, port=3306, charset='utf8')
+        cursor = connect.cursor()
+
+        sql = "insert into wx_renwu_err (name, renwu_id) VALUES ('"+content+"', '"+ str(renwu_id) +"')"
+        print(sql)
+        cursor.execute(sql)
+
+        fid = connect.insert_id()
+        connect.commit()
+        cursor.close()
+        connect.close()
+
+        return fid
 
 
 def go_remove_tag(value):
@@ -272,7 +417,11 @@ def is_child(child, father):
 def get_content_between_tables(pre, nxt):
     #如果第二个table在第一个里面
     txt = []
-    pre_title = pre.find('h2').text
+    pre_title = pre.find('h2')
+    if not pre.find('h2'):
+        pre_title = pre.find('h3')
+
+    pre_title = pre_title.text
     prefix = pre.find('span').text
     pre_title = pre_title.replace(prefix,'')
 

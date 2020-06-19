@@ -9,7 +9,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from scrapy import cmdline
 
 
-cmdline.execute("scrapy crawl renwu_baike".split())
+cmdline.execute("scrapy crawl renwu_img".split())
 
 
 

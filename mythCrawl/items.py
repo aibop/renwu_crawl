@@ -6,7 +6,7 @@
 # https://doc.scrapy.org/en/latest/topics/items.html
 
 import scrapy
-
+import pymysql
 
 class MythcrawlItem(scrapy.Item):
     # define the fields for your item here like:
@@ -63,18 +63,19 @@ class RenwuItem(scrapy.Item):
     infos = scrapy.Field()
 
     def get_sql(self):
-        fields = ['folklore', 'controversy', 'records', 'movement_area', 'historical', 'life_story', 'life_introduced', 'achievement', 'celebrated', 'historical_evaluation', 'master_works']
         infos = self['infos']
 
-        sql = "insert into wx_renwu_info (renwu_id,folklore,controversy,records, movement_area, historical,life_story,life_introduced,\
-            achievement,celebrated,historical_evaluation,master_works) VALUES (" + str(self['renwu_id']) + ","
-        for vo in fields:
-            content = infos[vo] if vo in infos else ''
-            sql += "'"+content + "',"
+        if infos:
+            sql = "insert into wx_renwu_info (renwu_id,field_id,content) VALUES "
+            for vo in infos:
+                content = vo['content']
+                content = pymysql.escape_string(content)
+                field_id = vo['fid']
+                sql += "('" + str(self['renwu_id']) + "' , '" + str(field_id) + "' , '"+ content + "'),"
 
-        sql = sql[:-1] + ")"
-
-        return sql
+            sql = sql[:-1]
+            return sql
+        return ''
 
     def update_sql(self):
         sql = """
@@ -83,11 +84,16 @@ class RenwuItem(scrapy.Item):
                 where id = %s
             """
 
+        generation = pymysql.escape_string(self['generation']) if self['generation'] else ''
+        master_works = pymysql.escape_string(self['master_works']) if self['master_works'] else ''
+        details = pymysql.escape_string(self['details']) if self['details'] else ''
+        belief = pymysql.escape_string(self['belief']) if self['belief'] else ''
+
         sql = "update wx_renwu_lists set alias_name='"+self['alias_name']+"',nationality='"+self['nationality']+"',nation='"+self['nation']+"',birthplace='"+self['birthplace']+"',\
-            birthdate='"+self['birthdate']+"',occupation='"+self['occupation']+"',achieve='"+self['achieve']+"',generation='"+self['generation']+"',ancestral_home='"+self['ancestral_home']+"' ,\
+            birthdate='"+self['birthdate']+"',occupation='"+self['occupation']+"',achieve='"+self['achieve']+"',generation='"+generation+"',ancestral_home='"+self['ancestral_home']+"' ,\
             official='"+self['official']+"',confer='"+self['confer']+"',posthumous_title='"+self['posthumous_title']+"',investiture='"+self['investiture']+"',\
-            dearth_time='"+self['dearth_time']+"',zihao='"+self['zihao']+"',master_works='"+self['master_works']+"',tomb='"+self['tomb']+"',\
-            era_name='"+self['era_name']+"',foreign_name='"+self['foreign_name']+"',belief='"+self['belief']+"',details='"+self['details']+"' \
+            dearth_time='"+self['dearth_time']+"',zihao='"+self['zihao']+"',master_works='"+master_works+"',tomb='"+self['tomb']+"',\
+            era_name='"+self['era_name']+"',foreign_name='"+self['foreign_name']+"',belief='"+belief+"',details='"+details+"' \
             where id = '"+str(self['renwu_id'])+"'"
         params = (
             # self['alias_name'], self['nationality'], self['nation'], self['birthplace'], self['birthdate'], self['occupation'], self['achieve'], self['generation'], 
@@ -96,4 +102,11 @@ class RenwuItem(scrapy.Item):
         )
 
         return sql, params
+
+class ReissImgsItem(scrapy.Item):
+    # define the fields for your item here like:
+    # name = scrapy.Field()
+    image_urls = scrapy.Field()
+    renwu_id = scrapy.Field()
+    image_paths = scrapy.Field()
 

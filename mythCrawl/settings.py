@@ -9,7 +9,7 @@
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
-import platform
+import platform, os
 
 BOT_NAME = 'mythCrawl'
 
@@ -71,7 +71,8 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    # 'mythCrawl.pipelines.MythcrawlPipeline': 300,
-   'mythCrawl.pipelines.RenWuListPipeline': 300,
+   # 'mythCrawl.pipelines.RenWuListPipeline': 300,
+   'mythCrawl.pipelines.ReissImgDownloadPipeline': 301,
     # 'scrapy_redis.pipelines.RedisPipeline': 301
 }
 
@@ -127,3 +128,14 @@ else:
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 HTTPERROR_ALLOWED_CODES  = [302]
 MEDIA_ALLOW_REDIRECTS = True
+
+
+# 获取当前目录绝对路径
+project_dir = os.path.abspath(os.path.dirname(__file__))
+# 获取images存储路径
+# IMAGES_STORE = os.path.join(project_dir,'images')
+IMAGES_URLS_FIELD = "image_urls"  # 对应item里面设定的字段，取到图片的url
+IMAGES_RESULT_FIELD = "image_path"
+prodir = os.path.abspath(os.path.dirname(__file__))
+# IMAGES_STORE = 'E:\\tobox\\reiss\\images' # 设置图片保存path
+IMAGES_STORE = 'F:\\lee\\wx-apply\\public\\renwu\\images' # 设置图片保存path
